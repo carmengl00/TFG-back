@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+# Note that you need mypy 0.670 already installed in your system
+# mypy requires Python 3. That's why we can't install it in the project
+# virtualenv.
+
+mypy backend/

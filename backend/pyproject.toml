@@ -1,0 +1,179 @@
+[tool.black]
+line-length = 88
+include-trailing-comma = false
+skip-string-normalization = false
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | migrations
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+[tool.ruff]
+# Enable Pyflakes `E` and `F` codes by default.
+select = [
+    "E", "F", "W", # flake8
+    "B",           # flake8-bugbear
+    "I",           # isort
+    "C4",          # flake8-comprehensions
+    "EM",          # flake8-errmsg
+    "ICN",         # flake8-import-conventions
+    "ISC",         # flake8-implicit-str-concat
+    "G",           # flake8-logging-format
+    "PGH",         # pygrep-hooks
+    "PIE",         # flake8-pie
+    "PL",          # pylint
+    "PT",          # flake8-pytest-style
+    "RET",         # flake8-return
+    "RUF",         # Ruff-specific
+    "SIM",         # flake8-simplify
+    "T20",         # flake8-print
+    "UP",          # pyupgrade
+    "YTT",         # flake8-2020
+    "EXE",         # flake8-executable
+    "NPY",         # NumPy specific rules
+    "PD",          # pandas-vet
+]
+ignore = [
+    "RET",
+    "ARG",
+    "EM101", # Ignore temporally
+    "PT011", # Ignore temporally
+    "PLR2004", # Ignore temporally
+    "B904", # Ignore temporally
+    "PT009", # Ignore temporally
+    "PGH004", # Ignore temporally
+    "B026", # Ignore temporally
+    "PLR0913", # Ignore temporally
+    "T201", # Ignore temporally
+    "SIM105", # Ignore temporally
+    "RUF007", # Ignore temporally
+    "ISC001", # Ignore temporally
+    "B017", # Ignore temporally
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = [
+    "E", "F", "W", # flake8
+    "B",           # flake8-bugbear
+    "I",           # isort
+    "C4",          # flake8-comprehensions
+    "EM",          # flake8-errmsg
+    "ICN",         # flake8-import-conventions
+    "ISC",         # flake8-implicit-str-concat
+    "G",           # flake8-logging-format
+    "PGH",         # pygrep-hooks
+    "PIE",         # flake8-pie
+    "PL",          # pylint
+    "PT",          # flake8-pytest-style
+    "RET",         # flake8-return
+    "RUF",         # Ruff-specific
+    "SIM",         # flake8-simplify
+    "T20",         # flake8-print
+    "UP",          # pyupgrade
+    "YTT",         # flake8-2020
+    "EXE",         # flake8-executable
+    "NPY",         # NumPy specific rules
+    "PD",          # pandas-vet
+    "E501", # line too long
+]
+unfixable = [
+    "RET504"
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "migrations",
+    "fixtures",
+
+]
+
+# Same as Black.
+line-length = 88
+
+fix = true
+
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"*fixtures*" = ["E501"]
+"**settings/**" = ["F405"]
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.poetry]
+name = "backend-back"
+version = "0.0.1"
+description = "Django + Strawberry Backend"
+authors = ["Z1 Digital Studio"]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+Django = "^4.2.3"
+django-storages = { version = "~1.13.2", extras = ["boto3"] }
+djangorestframework = "~3.14.0"
+django-health-check = "~3.17.0"
+django-cors-headers = "~4.2.0"
+strawberry-graphql = "^0.194.4"
+strawberry-django-jwt = "~0.2.3"
+strawberry-django-plus = "~3.1.1"
+celery = { version = "~5.3.1", extras = ["redis"] }
+django-celery-beat = "~2.5.0"
+dj_email_url = "~1.0.6"
+uWSGI = "~2.0.21"
+django-redis = "~5.3.0"
+psycopg2 = "~2.9.6"
+parameterized = "^0.9.0"
+
+[tool.poetry.group.local.dependencies]
+ipython = "~8.14.0"
+python-dotenv = "~1.0.0"
+remote-pdb = "^2.1.0"
+
+[tool.poetry.group.testing.dependencies]
+pytest-django = "~4.5.2"
+pytest-cov = "~4.1.0"
+mixer = "~7.2.2"
+Faker = "~12.0.0"
+freezegun = "~1.2.2"
+fakeredis = "~2.16.0"
+
+[tool.poetry.group.deploy.dependencies]
+django-environ = "~0.10.0"

@@ -1,0 +1,103 @@
+name: CICD
+concurrency:
+  group: CICD-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+
+jobs:
+  Lint:
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4.3.0
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+      - uses: pre-commit/action@v3.0.0
+        with:
+          token: ${{ secrets.github_token }}
+
+  Tests:
+    if: |
+      github.event_name == 'pull_request' ||
+      github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    services:
+      rabbitmq:
+        image: rabbitmq:3.8
+        env:
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+        ports:
+          - 5672:5672
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: backend
+          POSTGRES_PASSWORD: backend!
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - name: Setup Python
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 3.11
+          cache: "poetry"
+          cache-dependency-path: "**/pyproject.toml"
+      - name: Poetry install
+        run: poetry install --with local,testing
+      - name: Run tests
+        run: |
+          poetry run python -m pytest -sxv
+        env:
+          DB: postgres
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_USER: backend
+          DB_PASSWORD: backend!
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
+          RABBITMQ_HOST: 127.0.0.1
+          RABBITMQ_PORT: 5672
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+      - name: Comment coverage on PR
+        uses: 5monkeys/cobertura-action@master
+        with:
+          path: ./backend/coverage.xml
+          repo_token: ${{ secrets.github_token }}
+          minimum_coverage: 75

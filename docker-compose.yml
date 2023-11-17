@@ -1,0 +1,85 @@
+version: "3.4"
+x-restart-policy: &restart_policy
+  # our policy is always restart the container unless it is explicitly stopped
+  # or Docker daemon is restarted
+  restart: unless-stopped
+services:
+  redis:
+    <<: *restart_policy
+    image: "redis:7-alpine"
+    volumes:
+      - "boilerplate-redis:/data"
+    ports:
+      - "6379:6379"
+  # adminer:
+  #   <<: *restart_policy
+  #   image: adminer
+  #   ports:
+  #     - 8080:8080
+  database:
+    <<: *restart_policy
+    image: "postgres:15-alpine"
+    environment:
+      POSTGRES_DB: backend
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend!
+    ports:
+      - "5432:5432"
+    volumes:
+      - "boilerplate-database:/var/lib/postgresql@15/data"
+  # mailhog:
+  #   <<: *restart_policy
+  #   image: mailhog/mailhog:v1.0.1
+  #   ports:
+  #     - 1025:1025
+  #     - 8025:8025
+  web:
+    <<: *restart_policy
+    build:
+      context: backend/
+      target: local
+    working_dir: /home/ubuntu/webs/backend/backend
+    command: ./bin/run.sh
+    depends_on:
+      - redis
+      - database
+      # - mailhog
+    ports:
+      - "3031:3031"
+      - "4444:4444"
+    volumes:
+      - ./backend:/home/ubuntu/webs/backend/backend
+  # flower:
+  #   <<: *restart_policy
+  #   image: mher/flower
+  #   environment:
+  #     - CELERY_BROKER_URL=redis://redis:6379/0
+  #     - FLOWER_PORT=8888
+  #   ports:
+  #     - 8888:8888
+  #   depends_on:
+  #     - redis
+  nginx:
+    <<: *restart_policy
+    ports:
+      - "80:80/tcp"
+      - "443:443"
+    links:
+      - web
+    image: "nginx:latest"
+    volumes:
+      - type: bind
+        read_only: true
+        source: ./nginx/etc/
+        target: /etc/nginx
+      - type: bind
+        read_only: true
+        source: ./nginx/www/
+        target: /var/www/
+    depends_on:
+      - web
+volumes:
+  boilerplate-database:
+    external: true
+  boilerplate-redis:
+    external: true

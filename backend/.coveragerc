@@ -1,0 +1,24 @@
+[run]
+omit =
+    backend/settings/*
+    base/management/commands/wait_for_db.py
+    base/storage.py
+    base/mutations.py
+    media_upload/*
+    */tests/*
+    /root/*
+    */wsgi.py
+    */asgi.py
+    */apps.py
+    */migrations/*
+    */manage.py
+    */urls.py
+    .venv/*
+    */views.py
+    */__init__.py
+    */tests.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    @abstract

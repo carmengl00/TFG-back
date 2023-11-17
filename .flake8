@@ -1,0 +1,5 @@
+[flake8]
+max-line-length = 88
+exclude=**/settings*.py,**/__init__.py,**/migrations/**,**/fixtures/**
+max-complexity=10
+ban-relative-imports = true
