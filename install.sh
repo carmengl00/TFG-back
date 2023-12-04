@@ -66,8 +66,8 @@ $dc down --rmi local --remove-orphans
 
 echo ""
 echo "Creating volumes for persistent storage..."
-echo "Created $(docker volume create --name=boilerplate-database)."
-echo "Created $(docker volume create --name=boilerplate-redis)."
+echo "Created $(docker volume create --name=TFG-database)."
+echo "Created $(docker volume create --name=TFG-redis)."
 
 echo ""
 ensure_file_from_template $DOTENV_FILE

@@ -8,7 +8,7 @@ services:
     <<: *restart_policy
     image: "redis:7-alpine"
     volumes:
-      - "boilerplate-redis:/data"
+      - "TFG-redis:/data"
     ports:
       - "6379:6379"
   # adminer:
@@ -24,9 +24,9 @@ services:
       POSTGRES_USER: backend
       POSTGRES_PASSWORD: backend!
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - "boilerplate-database:/var/lib/postgresql@15/data"
+      - "TFG-database:/var/lib/postgresql@15/data"
   # mailhog:
   #   <<: *restart_policy
   #   image: mailhog/mailhog:v1.0.1
@@ -79,7 +79,7 @@ services:
     depends_on:
       - web
 volumes:
-  boilerplate-database:
+  TFG-database:
     external: true
-  boilerplate-redis:
+  TFG-redis:
     external: true
