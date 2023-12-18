@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     "base",
     "media_upload",
     "users",
+    "resources",
+    "slots",
     "corsheaders",
     "health_check",
 ]

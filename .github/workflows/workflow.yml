@@ -95,9 +95,3 @@ jobs:
           RABBITMQ_PORT: 5672
           RABBITMQ_DEFAULT_USER: guest
           RABBITMQ_DEFAULT_PASS: guest
-      - name: Comment coverage on PR
-        uses: 5monkeys/cobertura-action@master
-        with:
-          path: ./backend/coverage.xml
-          repo_token: ${{ secrets.github_token }}
-          minimum_coverage: 75

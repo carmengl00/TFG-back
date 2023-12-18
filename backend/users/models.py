@@ -4,12 +4,18 @@ from typing import TYPE_CHECKING
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
 from users.managers import UserManager
 
 if TYPE_CHECKING:  # pragma: no cover
     import datetime  # NOQA
+
+
+def generate_jwt_token() -> str:
+    return get_random_string(12)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -34,10 +40,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )  # type: str
 
-    phone = models.CharField(
-        verbose_name=_("phone"), max_length=15, blank=True, null=True, unique=True
-    )
+    public_name = models.CharField(
+        verbose_name=_("public name"),
+        max_length=30,
+        unique=True,
+        help_text=_("Visible name when users go to reserve your resource."),
+    )  # type: str
 
+    time_zone = models.DateTimeField(
+        verbose_name=_("time zone"),
+        default=timezone.now,
+    )  # type: datetime.datetime
     password = models.CharField(_("password"), max_length=100)  # type: str
     # Email
     email = models.EmailField(
@@ -72,6 +85,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
         auto_now=True,
     )  # type: datetime.datetime
+
+    jwt_token_key = models.CharField(max_length=12, default=generate_jwt_token)
 
     objects = UserManager()
 
