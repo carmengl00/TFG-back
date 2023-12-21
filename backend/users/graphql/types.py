@@ -12,6 +12,7 @@ class UserType:
     first_name: str
     last_name: str
     email: str
+    public_name: str
     created: datetime
 
     @strawberry.field
@@ -25,3 +26,10 @@ class UserType:
         if len(auth) == 2 and auth[0].lower() == prefix.lower():
             return auth[1]
         return ""
+
+
+@strawberry.type
+class UserTypeWeb:
+    user: UserType
+    token: str
+    refresh_token: str

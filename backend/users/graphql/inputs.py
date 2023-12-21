@@ -4,6 +4,7 @@ import strawberry
 @strawberry.input
 class RegisterInput:
     email: str
+    public_name: str
     first_name: str
     last_name: str
     password: str

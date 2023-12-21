@@ -46,9 +46,14 @@ mutation resetPassword ($input: ResetPasswordInput!) {
 LOGIN = """
 mutation login ($input: LoginInput!) {
     login(input: $input) {
-        id
-        email
+        user{
+            id
+            email
+        }
+        token
+        refreshToken
     }
+
 }
 """
 
@@ -57,6 +62,7 @@ mutation register ($input: RegisterInput!) {
     register(input: $input) {
         firstName
         lastName
+        publicName
         email
     }
 }
@@ -76,6 +82,7 @@ class TestUserSchema(TestCase):
     CORRECT_EMAIL = "test@test.com"
     CORRECT_PASSWORD = "q&YsAp-Y8)KYd.H^"
     CORRECT_FIRST_NAME = "firstName"
+    CORRECT_PUBLIC_NAME = "publicName"
     WRONG_FIRST_NAME = secrets.token_hex(31)
     CORRECT_LAST_NAME = "lastName"
     SHORT_PASSWORD = "short"
@@ -106,6 +113,7 @@ class TestUserSchema(TestCase):
                 "variables": {
                     "input": {
                         "email": self.CORRECT_EMAIL,
+                        "publicName": self.CORRECT_PUBLIC_NAME,
                         "firstName": self.CORRECT_FIRST_NAME,
                         "lastName": self.CORRECT_LAST_NAME,
                         "password": self.CORRECT_PASSWORD,
@@ -119,6 +127,7 @@ class TestUserSchema(TestCase):
         register = data.get("data").get("register")
         assert register.get("firstName") == "firstName"
         assert register.get("lastName") == "lastName"
+        assert register.get("publicName") == "publicName"
         assert register.get("email") == "test@test.com"
 
     def test_register_incorrect_email_already_exists(self):
@@ -131,6 +140,7 @@ class TestUserSchema(TestCase):
                         "email": self.user.email,
                         "firstName": self.CORRECT_FIRST_NAME,
                         "lastName": self.CORRECT_LAST_NAME,
+                        "publicName": self.CORRECT_PUBLIC_NAME,
                         "password": self.CORRECT_PASSWORD,
                     }
                 },
@@ -152,6 +162,7 @@ class TestUserSchema(TestCase):
                         "email": self.CORRECT_EMAIL,
                         "firstName": self.CORRECT_FIRST_NAME,
                         "lastName": self.CORRECT_LAST_NAME,
+                        "publicName": self.CORRECT_PUBLIC_NAME,
                         "password": self.SHORT_PASSWORD,
                     }
                 },
@@ -176,6 +187,7 @@ class TestUserSchema(TestCase):
                         "email": self.CORRECT_EMAIL,
                         "firstName": self.CORRECT_FIRST_NAME,
                         "lastName": self.CORRECT_LAST_NAME,
+                        "publicName": self.CORRECT_PUBLIC_NAME,
                         "password": self.COMMON_PASSWORD,
                     }
                 },
@@ -197,6 +209,7 @@ class TestUserSchema(TestCase):
                         "email": "",
                         "firstName": "",
                         "lastName": "",
+                        "publicName": "",
                         "password": self.CORRECT_PASSWORD,
                     }
                 },
@@ -225,8 +238,8 @@ class TestUserSchema(TestCase):
         response = GraphQLView.as_view(schema=schema)(request)
         data = json.loads(response.content.decode())
         login = data.get("data").get("login")
-        assert login.get("id") == str(self.user.id)
-        assert login.get("email") == "user@test.com"
+        assert login.get("user").get("id") == str(self.user.id)
+        assert login.get("user").get("email") == "user@test.com"
 
     def test_profile(self):
         request = self.request_factory.post(

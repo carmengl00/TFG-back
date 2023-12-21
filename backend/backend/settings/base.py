@@ -1,6 +1,8 @@
 import os
+from datetime import timedelta
 
 import dj_email_url
+from pytimeparse import parse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -192,3 +194,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 5  # default 2.5 MB (2621440)
 APP_CONFIG = None
 
 GRAPHQL_JWT = {"JWT_AUTHENTICATE_INTROSPECTION": False}
+
+
+# JWT
+JWT_EXPIRE = bool(os.environ.get("JWT_EXPIRE") or 1)
+JWT_TTL_ACCESS = os.environ.get("JWT_TTL_ACCESS") or "1 day"
+JWT_TTL_ACCESS_TIMEDELTA = timedelta(seconds=parse(JWT_TTL_ACCESS))
+JWT_TTL_REFRESH = os.environ.get("JWT_TTL_REFRESH") or "30 days"
+JWT_TTL_REFRESH_TIMEDELTA = timedelta(seconds=parse(JWT_TTL_REFRESH))

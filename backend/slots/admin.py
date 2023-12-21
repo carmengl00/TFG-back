@@ -7,7 +7,6 @@ from slots.models import ReservedSlot
 
 @admin.register(ReservedSlot)
 class ReservedSlotAdmin(admin.ModelAdmin):
-    list_select_related = "resource"
     list_display = (
         "resource",
         "name",

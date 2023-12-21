@@ -7,8 +7,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from strawberry.types import Info
 from strawberry_django_jwt.decorators import login_required
-from strawberry_django_jwt.shortcuts import get_token
 
+from base.jwt import create_access_token, create_refresh_token
 from base.utils import send_mail
 from users import utils as users_utils
 from users.graphql.inputs import (
@@ -19,7 +19,7 @@ from users.graphql.inputs import (
     RequestResetPasswordInput,
     ResetPasswordInput,
 )
-from users.graphql.types import UserType
+from users.graphql.types import UserType, UserTypeWeb
 from users.models import User
 
 
@@ -28,6 +28,7 @@ class Mutation:
     @strawberry.mutation
     def register(self, input: RegisterInput) -> UserType:
         email = input.email.lower()
+        public_name = input.public_name
         if not email or not input.first_name or not input.last_name:
             raise Exception("All fields must be filled.")
         if User.objects.filter(email=email).exists():
@@ -37,14 +38,20 @@ class Mutation:
         except ValidationError as e:
             # Remove extra characteres before sending error message
             raise Exception(str(e).replace("['", "").replace("']", ""))
-        user = User(email=email, first_name=input.first_name, last_name=input.last_name)
+        if User.objects.filter(public_name=public_name).exists():
+            raise Exception("A user with that public name already exists.")
+        user = User(
+            email=email,
+            public_name=public_name,
+            first_name=input.first_name,
+            last_name=input.last_name,
+        )
         user.set_password(input.password)
         user.save()
-        user.token = users_utils.get_token(user, input.password)
         return user
 
     @strawberry.mutation
-    def login(self, info: Info, input: LoginInput) -> UserType:
+    def login(self, info: Info, input: LoginInput) -> UserTypeWeb:
         user = authenticate(
             request=info.context.request,
             username=input.email,
@@ -52,11 +59,17 @@ class Mutation:
         )
         if user is None:
             raise Exception("Please, enter valid credentials")
-        token = get_token(user, info.context)
-        user.token = token
+
+        access_token = create_access_token(user)
+        refresh_token = create_refresh_token(user)
+
         user.last_login = timezone.now()
-        user.save()
-        return user
+        user.save(update_fields=["last_login"])
+        return UserTypeWeb(
+            user=user,
+            token=access_token,
+            refresh_token=refresh_token,
+        )
 
     @login_required
     @strawberry.mutation

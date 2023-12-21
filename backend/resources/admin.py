@@ -8,7 +8,6 @@ from resources.models import DayAvailability, Resource
 
 @admin.register(Resource)
 class ResourceAdmin(ModelAdmin):
-    list_select_related = "user"
     list_display = (
         "name",
         "description",
@@ -40,7 +39,6 @@ class ResourceAdmin(ModelAdmin):
 
 @admin.register(DayAvailability)
 class DayAvailabilityAdmin(ModelAdmin):
-    list_select_related = "resource"
     list_display = (
         "resource",
         "day",
