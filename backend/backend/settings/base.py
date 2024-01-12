@@ -42,9 +42,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -172,7 +172,9 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 CORS_ALLOW_ALL_ORIGINS = True
-# CORS_ORIGIN_WHITELIST = [""] # TODO set this VAR on PRODUCTION
+# CORS_ALLOWED_ORIGINS = [""] # TODO set this VAR on PRODUCTION
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Redis
 
