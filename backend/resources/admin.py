@@ -14,13 +14,14 @@ class ResourceAdmin(ModelAdmin):
         "available_time",
         "start_date",
         "end_date",
+        "location",
     )
     list_filter = ("start_date", "end_date")
     ordering = ("start_date",)
     search_fields = ("name", "description")
 
     fieldsets = (
-        (None, {"fields": ("name", "description", "available_time")}),
+        (None, {"fields": ("name", "description", "available_time", "location")}),
         (
             "Date information",
             {

@@ -138,7 +138,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
 AUTH_USER_MODEL = "users.User"
 
 AUTHENTICATION_BACKENDS = [
-    "strawberry_django_jwt.backends.JSONWebTokenBackend",
+    "users.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 

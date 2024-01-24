@@ -60,7 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_confirmed = models.BooleanField(
         verbose_name=_("email confirmed"), default=False
     )
-
+    logout = models.DateTimeField(
+        verbose_name=_("logout"), null=True, blank=True, editable=False
+    )  # type: datetime.datetime
     # Internal
     is_staff = models.BooleanField(
         verbose_name=_("staff status"),

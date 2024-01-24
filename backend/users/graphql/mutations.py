@@ -73,6 +73,16 @@ class Mutation:
 
     @login_required
     @strawberry.mutation
+    def logout(self, info: Info) -> bool:
+        """Mutation to logout an user from the platform"""
+
+        user = info.context.request.user
+        user.logout = timezone.now()
+        user.save()
+        return True
+
+    @login_required
+    @strawberry.mutation
     def user(self, info: Info, input: ProfileInput) -> UserType:
         user = info.context.request.user
         user.first_name = input.first_name

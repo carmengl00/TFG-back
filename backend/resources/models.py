@@ -31,6 +31,10 @@ class Resource(SimpleModel):
         verbose_name="end_date",
     )
 
+    location = models.CharField(
+        verbose_name="location", max_length=100, blank=True, null=True
+    )
+
     class Meta:
         verbose_name = "resource"
         verbose_name_plural = "resources"
