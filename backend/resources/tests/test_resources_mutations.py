@@ -2,9 +2,7 @@ import json
 
 import pytest
 from mixer.backend.django import mixer
-from strawberry.django.views import GraphQLView
 
-from backend.schema import schema
 from base.factory_test_case import TestBase
 from resources.errors import DATE_ERROR, EXISTING_RESOURCE, PAST_DATE
 from resources.models import Resource
@@ -29,16 +27,7 @@ class TestResourcesMutations(TestBase):
                 "location": "Sevilla",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": CREATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=CREATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
         user = User.objects.get(id=self.user.id)
 
@@ -57,16 +46,7 @@ class TestResourcesMutations(TestBase):
                 "location": "Sevilla",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": CREATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=CREATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == PAST_DATE
@@ -82,16 +62,7 @@ class TestResourcesMutations(TestBase):
                 "location": "Sevilla",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": CREATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=CREATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == DATE_ERROR
@@ -115,16 +86,7 @@ class TestResourcesMutations(TestBase):
                 "location": "Sevilla",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": CREATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=CREATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == EXISTING_RESOURCE
@@ -140,16 +102,7 @@ class TestResourcesMutations(TestBase):
         variables = {
             "id": str(resource.id),
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": DELETE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=DELETE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
         resource = data.get("data").get("deleteResource")
         assert resource is True
@@ -166,16 +119,7 @@ class TestResourcesMutations(TestBase):
         variables = {
             "id": str(resource.id),
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": DELETE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=DELETE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
         assert (
             data.get("errors")[0].get("message")
@@ -200,16 +144,7 @@ class TestResourcesMutations(TestBase):
                 "location": "Huelva",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": UPDATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
         update = data.get("data").get("updateResource")
         assert update.get("name") == "Test editado"
@@ -227,17 +162,7 @@ class TestResourcesMutations(TestBase):
         variables = {
             "input": {"resourceId": str(resource.id), "startDate": "2022-01-01"}
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": UPDATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == PAST_DATE
@@ -257,17 +182,7 @@ class TestResourcesMutations(TestBase):
                 "endDate": "2024-01-01",
             }
         }
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": UPDATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == DATE_ERROR
@@ -283,17 +198,7 @@ class TestResourcesMutations(TestBase):
             location="Sevilla",
         )
         variables = {"input": {"resourceId": str(resource.id), "name": "Test 1"}}
-        request = self.request_factory.post(
-            "/graphql/",
-            {
-                "query": UPDATE_RESOURCE,
-                "variables": variables,
-            },
-            content_type="application/json",
-        )
-
-        request.user = self.user
-        response = GraphQLView.as_view(schema=schema)(request)
+        response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
         assert data.get("errors")[0].get("message") == EXISTING_RESOURCE

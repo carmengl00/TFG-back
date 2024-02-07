@@ -1,5 +1,5 @@
 import uuid
-from datetime import date
+from datetime import date, time
 
 import strawberry
 
@@ -20,5 +20,19 @@ class ResourceType:
 
 
 @strawberry.type
+class DayAvailabilityType:
+    id: uuid.UUID
+    resource: ResourceType
+    day: date
+    start_time: time
+    end_time: time
+
+
+@strawberry.type
 class PaginatedResourceType(PaginatedQueryType):
     edges: list[ResourceType]
+
+
+@strawberry.type
+class PaginatedDayAvailabilityType(PaginatedQueryType):
+    edges: list[DayAvailabilityType]

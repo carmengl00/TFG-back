@@ -22,3 +22,25 @@ RESOURCES_ITEMS = """
     }
 
 """
+
+DAY_AVAILABILITY_ITEMS = """
+    query($pagination: PaginationInput!, $input: MonthInput!){
+        myDailyAvailability(pagination: $pagination, input: $input){
+            pageInfo{
+                page
+                pages
+                totalResults
+            }
+            edges{
+                id
+                resource{
+                    name
+                }
+                day
+                startTime
+                endTime
+            }
+        }
+    }
+
+"""

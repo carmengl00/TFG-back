@@ -2,14 +2,28 @@ from uuid import UUID
 
 import strawberry
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db.models import Q
 from django.utils import timezone
 from strawberry.types import Info
 from strawberry_django_jwt.decorators import login_required
 
-from resources.errors import DATE_ERROR, EXISTING_RESOURCE, PAST_DATE, PERMISSION_ERROR
-from resources.graphql.inputs import ResourceInput, UpdateResourceInput
-from resources.graphql.types import ResourceType
-from resources.models import Resource
+from resources.errors import (
+    DATE_ERROR,
+    EXISTING_RESOURCE,
+    OUT_OF_RANGE,
+    OVERLAP_ERROR,
+    PAST_DATE,
+    PERMISSION_ERROR,
+    TIME_ERROR,
+)
+from resources.graphql.inputs import (
+    DayAvailabilityInput,
+    ResourceInput,
+    UpdateDayAvailabilityInput,
+    UpdateResourceInput,
+)
+from resources.graphql.types import DayAvailabilityType, ResourceType
+from resources.models import DayAvailability, Resource
 
 
 @strawberry.type
@@ -111,3 +125,68 @@ class ResourceMutation:
         resource.save()
 
         return resource
+
+    @strawberry.field(description="Creates a day availability")
+    @login_required
+    def create_day_availability(
+        self, input: DayAvailabilityInput, resource_id: UUID
+    ) -> DayAvailabilityType:
+        resource = Resource.objects.get(id=resource_id)
+
+        if input.day < resource.start_date or input.day > resource.end_date:
+            raise ValidationError(OUT_OF_RANGE)
+
+        if input.start_time >= input.end_time:
+            raise ValidationError(TIME_ERROR)
+
+        if DayAvailability.objects.filter(
+            day=input.day,
+            start_time__lt=input.end_time,
+            end_time__gt=input.start_time,
+        ).exists():
+            raise ValidationError(OVERLAP_ERROR)
+
+        day_availability = DayAvailability.objects.create(
+            resource=resource,
+            day=input.day,
+            start_time=input.start_time,
+            end_time=input.end_time,
+        )
+
+        return day_availability
+
+    @strawberry.field(description="Delete a day availability")
+    @login_required
+    def delete_day_availability(self, id: UUID) -> bool:
+        DayAvailability.objects.filter(id=id).delete()
+        return True
+
+    @strawberry.field(description="Updates a day availability")
+    @login_required
+    def update_day_availability(
+        self, input: UpdateDayAvailabilityInput
+    ) -> DayAvailabilityType:
+        day_availability = DayAvailability.objects.get(id=input.day_availability_id)
+
+        updated_fields = {
+            "start_time": input.start_time,
+            "end_time": input.end_time,
+        }
+
+        if input.start_time >= input.end_time:
+            raise ValidationError(TIME_ERROR)
+
+        if DayAvailability.objects.filter(
+            ~Q(id=input.day_availability_id),
+            day=day_availability.day,
+            start_time__lt=input.end_time,
+            end_time__gt=input.start_time,
+        ).exists():
+            raise ValidationError(OVERLAP_ERROR)
+
+        day_availability.start_time = updated_fields["start_time"]
+        day_availability.end_time = updated_fields["end_time"]
+
+        day_availability.save()
+
+        return day_availability
