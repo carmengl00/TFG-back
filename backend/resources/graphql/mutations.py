@@ -140,6 +140,7 @@ class ResourceMutation:
             raise ValidationError(TIME_ERROR)
 
         if DayAvailability.objects.filter(
+            resource=resource,
             day=input.day,
             start_time__lt=input.end_time,
             end_time__gt=input.start_time,
@@ -168,6 +169,8 @@ class ResourceMutation:
     ) -> DayAvailabilityType:
         day_availability = DayAvailability.objects.get(id=input.day_availability_id)
 
+        resource = day_availability.resource
+
         updated_fields = {
             "start_time": input.start_time,
             "end_time": input.end_time,
@@ -178,6 +181,7 @@ class ResourceMutation:
 
         if DayAvailability.objects.filter(
             ~Q(id=input.day_availability_id),
+            resource=resource,
             day=day_availability.day,
             start_time__lt=input.end_time,
             end_time__gt=input.start_time,
