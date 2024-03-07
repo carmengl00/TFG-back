@@ -22,8 +22,8 @@ class TestResourcesMutations(TestBase):
                 "name": "test 1",
                 "description": "test 1 description",
                 "availableTime": 120,
-                "startDate": "2024-02-22",
-                "endDate": "2024-02-27",
+                "startDate": "2030-02-22",
+                "endDate": "2030-02-27",
                 "location": "Sevilla",
             }
         }
@@ -42,7 +42,7 @@ class TestResourcesMutations(TestBase):
                 "description": "test 1 description",
                 "availableTime": 120,
                 "startDate": "2022-02-22",
-                "endDate": "2024-02-27",
+                "endDate": "2030-02-27",
                 "location": "Sevilla",
             }
         }
@@ -57,8 +57,8 @@ class TestResourcesMutations(TestBase):
                 "name": "test 1",
                 "description": "test 1 description",
                 "availableTime": 120,
-                "startDate": "2024-02-22",
-                "endDate": "2024-02-20",
+                "startDate": "2030-02-22",
+                "endDate": "2030-02-20",
                 "location": "Sevilla",
             }
         }

@@ -23,6 +23,7 @@ class DayAvailabilityInput:
 
 @strawberry.input
 class MonthInput:
+    resource_id: UUID
     month: int
     year: int
 
