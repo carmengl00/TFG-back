@@ -38,36 +38,14 @@ UPDATE_RESOURCE = """
     }
 """
 
-CREATE_DAY_AVAILABILITY = """
-    mutation($input:DayAvailabilityInput!, $resourceId:UUID!){
-        createDayAvailability(input:$input, resourceId:$resourceId){
-            resource{
-                name
-            }
-            id
-            day
-            startTime
-            endTime
-        }
+CREATE_OR_UPDATE_AVAILABILITY = """
+    mutation($input:CreateOrUpdateAvailabilityInput!){
+        createOrUpdateAvailability(input:$input)
     }
 """
 
 DELETE_DAY_AVAILABILITY = """
     mutation($id: UUID!){
         deleteDayAvailability(id: $id)
-    }
-"""
-
-UPDATE_DAY_AVAILABILITY = """
-    mutation($input: UpdateDayAvailabilityInput!){
-        updateDayAvailability(input: $input){
-             id
-            resource{
-                name
-            }
-            day
-            startTime
-            endTime
-        }
     }
 """

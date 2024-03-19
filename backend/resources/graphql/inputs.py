@@ -15,10 +15,16 @@ class ResourceInput:
 
 
 @strawberry.input
-class DayAvailabilityInput:
-    day: date
+class TimeRangeInput:
+    day_availability_id: UUID | None = strawberry.UNSET
     start_time: time
     end_time: time
+
+
+@strawberry.input
+class DayAvailabilityInput:
+    day: date
+    timeRange: list[TimeRangeInput]
 
 
 @strawberry.input
@@ -44,3 +50,9 @@ class UpdateDayAvailabilityInput:
     day_availability_id: UUID
     start_time: time
     end_time: time
+
+
+@strawberry.input
+class CreateOrUpdateAvailabilityInput:
+    resource_id: UUID
+    items: list[DayAvailabilityInput]
