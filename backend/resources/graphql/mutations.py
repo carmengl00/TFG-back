@@ -191,13 +191,15 @@ class ResourceMutation:
             DayAvailability.objects.bulk_update(to_update, fields_to_update)
             DayAvailability.objects.bulk_create(to_create)
         except AvailabilityValidationException as e:
-            print(
+            msg = (
                 f"An error occurred: {e}, "
                 f"{e.conflicting_day}, "
                 f"{e.conflicting_start_time}, "
                 f"{e.conflicting_end_time}"
             )
+            raise ValidationError(msg)
         except Exception as e:
-            print(f"An error occurred: {e}")
-        else:
-            return True
+            msg = f"An error occurred: {e}"
+            raise ValidationError(msg)
+
+        return True
