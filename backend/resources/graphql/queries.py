@@ -1,4 +1,5 @@
 from collections import defaultdict
+from uuid import UUID
 
 import strawberry
 from strawberry.types import Info
@@ -7,7 +8,11 @@ from strawberry_django_jwt.decorators import login_required
 from base.graphql.inputs import PaginationInput
 from base.graphql.utils import get_paginator
 from resources.graphql.inputs import MonthInput
-from resources.graphql.types import DayAvailabilityGroupType, PaginatedResourceType
+from resources.graphql.types import (
+    DayAvailabilityGroupType,
+    PaginatedResourceType,
+    ResourceType,
+)
 from resources.models import DayAvailability, Resource
 
 
@@ -29,6 +34,12 @@ class ResourcesQuery:
             pagination.page,
             PaginatedResourceType,
         )
+
+    @strawberry.field(description="Return a resource")
+    @login_required
+    def resource(self, info: Info, id: UUID) -> ResourceType:
+        user = info.context.request.user
+        return Resource.objects.get(user=user, id=id)
 
     @strawberry.field(description="Returns a list of your daily availabilities.")
     @login_required

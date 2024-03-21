@@ -23,6 +23,23 @@ RESOURCES_ITEMS = """
 
 """
 
+RESOURCE_ITEM = """
+    query($id:UUID!){
+        resource(id:$id){
+            user{
+                email
+            }
+            id
+            name
+            description
+            availableTime
+            startDate
+            endDate
+            location
+        }
+    }
+"""
+
 DAY_AVAILABILITY_ITEMS = """
     query($input: MonthInput!){
         myDailyAvailability(input: $input){

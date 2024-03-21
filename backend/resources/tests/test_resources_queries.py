@@ -5,7 +5,8 @@ from mixer.backend.django import mixer
 
 from base.factory_test_case import TestBase
 from resources.models import Resource
-from resources.tests.requests.queries import RESOURCES_ITEMS
+from resources.tests.requests.queries import RESOURCE_ITEM, RESOURCES_ITEMS
+from users.models import User
 
 
 @pytest.mark.django_db()
@@ -72,3 +73,16 @@ class TestResourcesQueries(TestBase):
         response = self.post(query=RESOURCES_ITEMS, user=self.user, variables=variables)
         data = json.loads(response.content.decode())
         assert data.get("data") is None
+
+    def test_resource(self):
+        user = mixer.blend(User)
+        resource = mixer.blend(
+            Resource, user=user, name="Test 1", description="Descripción test 1"
+        )
+        variables = {"id": str(resource.id)}
+
+        response = self.post(query=RESOURCE_ITEM, user=user, variables=variables)
+        data = json.loads(response.content.decode())
+        resource = data.get("data").get("resource")
+        self.assertIsNotNone(resource)
+        assert resource.get("name") == "Test 1"
