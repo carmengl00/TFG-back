@@ -4,7 +4,12 @@ import pytest
 from mixer.backend.django import mixer
 
 from base.factory_test_case import TestBase
-from resources.errors import DATE_ERROR, EXISTING_RESOURCE, PAST_DATE
+from resources.errors import (
+    DATE_ERROR,
+    EXISTING_RESOURCE,
+    PAST_END_DATE,
+    PAST_START_DATE,
+)
 from resources.models import Resource
 from resources.tests.requests.mutations import (
     CREATE_RESOURCE,
@@ -49,7 +54,7 @@ class TestResourcesMutations(TestBase):
         response = self.post(query=CREATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
-        assert data.get("errors")[0].get("message") == PAST_DATE
+        assert data.get("errors")[0].get("message") == PAST_START_DATE
 
     def test_create_resource_date_error(self):
         variables = {
@@ -159,13 +164,11 @@ class TestResourcesMutations(TestBase):
             availableTime=30,
             location="Sevilla",
         )
-        variables = {
-            "input": {"resourceId": str(resource.id), "startDate": "2022-01-01"}
-        }
+        variables = {"input": {"resourceId": str(resource.id), "endDate": "2022-01-01"}}
         response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
         data = json.loads(response.content.decode())
 
-        assert data.get("errors")[0].get("message") == PAST_DATE
+        assert data.get("errors")[0].get("message") == PAST_END_DATE
 
     def test_update_resource_date_error(self):
         resource = mixer.blend(
@@ -179,7 +182,7 @@ class TestResourcesMutations(TestBase):
             "input": {
                 "resourceId": str(resource.id),
                 "startDate": "2040-02-01",
-                "endDate": "2024-01-01",
+                "endDate": "2040-01-01",
             }
         }
         response = self.post(query=UPDATE_RESOURCE, variables=variables, user=self.user)
@@ -188,10 +191,19 @@ class TestResourcesMutations(TestBase):
         assert data.get("errors")[0].get("message") == DATE_ERROR
 
     def test_update_resource_existing_resource(self):
-        resource = mixer.blend(
+        mixer.blend(
             Resource,
             user=self.user,
             name="Test 1",
+            available_time=30,
+            start_date="2025-01-01",
+            end_date="2026-01-01",
+            location="Sevilla",
+        )
+        resource = mixer.blend(
+            Resource,
+            user=self.user,
+            name="Test 2",
             available_time=30,
             start_date="2025-01-01",
             end_date="2026-01-01",

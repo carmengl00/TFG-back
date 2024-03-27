@@ -7,7 +7,13 @@ from strawberry.types import Info
 from strawberry_django_jwt.decorators import login_required
 
 from base.exceptions import AvailabilityValidationException
-from resources.errors import DATE_ERROR, EXISTING_RESOURCE, PAST_DATE, PERMISSION_ERROR
+from resources.errors import (
+    DATE_ERROR,
+    EXISTING_RESOURCE,
+    PAST_END_DATE,
+    PAST_START_DATE,
+    PERMISSION_ERROR,
+)
 from resources.graphql.inputs import (
     CreateOrUpdateAvailabilityInput,
     ResourceInput,
@@ -25,7 +31,7 @@ class ResourceMutation:
     def create_resource(self, input: ResourceInput, info: Info) -> ResourceType:
         user = info.context.request.user
         if input.start_date < timezone.now().date():
-            raise ValidationError(PAST_DATE)
+            raise ValidationError(PAST_START_DATE)
 
         if input.start_date >= input.end_date:
             raise ValidationError(DATE_ERROR)
@@ -91,19 +97,23 @@ class ResourceMutation:
             else input.location,
         }
 
-        if input.start_date and input.start_date < timezone.now().date():
-            raise ValidationError(PAST_DATE)
+        if input.end_date and input.end_date < timezone.now().date():
+            raise ValidationError(PAST_END_DATE)
 
         if updated_fields["start_date"] >= updated_fields["end_date"]:
             raise ValidationError(DATE_ERROR)
 
-        existing_resource = Resource.objects.filter(
-            user=user,
-            name=updated_fields["name"],
-            start_date=updated_fields["start_date"],
-            end_date=updated_fields["end_date"],
-            available_time=updated_fields["available_time"],
-        ).first()
+        existing_resource = (
+            Resource.objects.filter(
+                user=user,
+                name=updated_fields["name"],
+                start_date=updated_fields["start_date"],
+                end_date=updated_fields["end_date"],
+                available_time=updated_fields["available_time"],
+            )
+            .exclude(id=resource.id)
+            .first()
+        )
         if existing_resource:
             raise ValidationError(EXISTING_RESOURCE)
 
