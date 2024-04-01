@@ -49,3 +49,9 @@ DELETE_DAY_AVAILABILITY = """
         deleteDayAvailability(id: $id)
     }
 """
+
+DELETE_ALL_AVAILABILITIES = """
+    mutation($resourceId: UUID!){
+        deleteAllAvailabilities(resourceId:$resourceId)
+    }
+"""

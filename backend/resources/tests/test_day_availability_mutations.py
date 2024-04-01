@@ -7,6 +7,7 @@ from base.factory_test_case import TestBase
 from resources.models import DayAvailability, Resource
 from resources.tests.requests.mutations import (
     CREATE_OR_UPDATE_AVAILABILITY,
+    DELETE_ALL_AVAILABILITIES,
     DELETE_DAY_AVAILABILITY,
 )
 from users.models import User
@@ -87,3 +88,18 @@ class TestDayAvailabilityMutations(TestBase):
             variables=variables,
         )
         assert len(DayAvailability.objects.all()) == 1
+
+    def test_delete_all_availabilities(self):
+        resource = mixer.blend(Resource, user=self.user)
+        mixer.blend(DayAvailability, resource=resource, n=5)
+
+        variables = {
+            "resourceId": str(resource.id),
+        }
+
+        response = self.post(
+            query=DELETE_ALL_AVAILABILITIES, variables=variables, user=self.user
+        )
+        data = json.loads(response.content.decode())
+        assert data.get("data").get("deleteAllAvailabilities") is True
+        assert len(DayAvailability.objects.filter(resource=resource)) == 0

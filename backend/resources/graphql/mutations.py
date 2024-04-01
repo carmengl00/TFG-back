@@ -213,3 +213,16 @@ class ResourceMutation:
             raise ValidationError(msg)
 
         return True
+
+    @strawberry.field(description="Deletes all availabilities from a resource")
+    @login_required
+    def delete_all_availabilities(self, info: Info, resource_id: UUID) -> bool:
+        user = info.context.request.user
+        try:
+            resource = Resource.objects.get(id=resource_id, user=user)
+            DayAvailability.objects.filter(resource=resource).delete()
+
+        except Exception as e:
+            raise ValidationError(e)
+
+        return True
