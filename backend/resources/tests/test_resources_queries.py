@@ -5,7 +5,11 @@ from mixer.backend.django import mixer
 
 from base.factory_test_case import TestBase
 from resources.models import Resource
-from resources.tests.requests.queries import RESOURCE_ITEM, RESOURCES_ITEMS
+from resources.tests.requests.queries import (
+    RESOURCE_FROM_PUBLIC_NAME_ITEM,
+    RESOURCE_ITEM,
+    RESOURCES_ITEMS,
+)
 from users.models import User
 
 
@@ -86,3 +90,23 @@ class TestResourcesQueries(TestBase):
         resource = data.get("data").get("resource")
         self.assertIsNotNone(resource)
         assert resource.get("name") == "Test 1"
+
+    def test_resource_from_public_name(self):
+        user = mixer.blend(
+            User, public_name="pepito", first_name="Pepe", last_name="Grillo"
+        )
+
+        mixer.blend(Resource, user=user, name="Test 1")
+        variables = {"publicName": "pepito"}
+
+        response = self.post(
+            query=RESOURCE_FROM_PUBLIC_NAME_ITEM, user=user, variables=variables
+        )
+        data = json.loads(response.content.decode())
+
+        resource_data_list = data.get("data").get("resourceFromPublicName")
+
+        retrieved_resource = resource_data_list[0]
+        assert (
+            retrieved_resource.get("name") == "Test 1"
+        ), "El nombre del recurso no coincide"

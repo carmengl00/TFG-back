@@ -14,6 +14,7 @@ from resources.graphql.types import (
     ResourceType,
 )
 from resources.models import DayAvailability, Resource
+from users.models import User
 
 
 @strawberry.type
@@ -40,6 +41,11 @@ class ResourcesQuery:
     def resource(self, info: Info, id: UUID) -> ResourceType:
         user = info.context.request.user
         return Resource.objects.get(user=user, id=id)
+
+    @strawberry.field(description="Return a resource from public name")
+    def resource_from_public_name(self, public_name: str) -> list[ResourceType]:
+        user = User.objects.get(public_name=public_name)
+        return Resource.objects.filter(user=user)
 
     @strawberry.field(description="Returns a list of your daily availabilities.")
     @login_required
