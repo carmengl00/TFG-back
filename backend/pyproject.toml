@@ -162,6 +162,7 @@ django-redis = "~5.3.0"
 psycopg2 = "~2.9.6"
 parameterized = "^0.9.0"
 pytimeparse = "^1.1.8"
+pytz = "^2024.1"
 
 [tool.poetry.group.local.dependencies]
 ipython = "~8.14.0"
