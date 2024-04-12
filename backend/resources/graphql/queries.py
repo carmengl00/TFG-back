@@ -37,10 +37,8 @@ class ResourcesQuery:
         )
 
     @strawberry.field(description="Return a resource")
-    @login_required
-    def resource(self, info: Info, id: UUID) -> ResourceType:
-        user = info.context.request.user
-        return Resource.objects.get(user=user, id=id)
+    def resource(self, id: UUID) -> ResourceType:
+        return Resource.objects.get(id=id)
 
     @strawberry.field(description="Return a resource from public name")
     def resource_from_public_name(self, public_name: str) -> list[ResourceType]:
