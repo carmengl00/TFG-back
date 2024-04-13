@@ -38,7 +38,7 @@ services:
     build:
       context: backend/
       target: local
-    working_dir: /home/ubuntu/webs/backend/backend
+    working_dir: /mnt/c/Users/prcar/OneDrive/Escritorio/TFG-back/backend/backend
     command: ./bin/run.sh
     depends_on:
       - redis
@@ -48,7 +48,7 @@ services:
       - "3031:3031"
       - "4444:4444"
     volumes:
-      - ./backend:/home/ubuntu/webs/backend/backend
+      - ./backend:/mnt/c/Users/prcar/OneDrive/Escritorio/TFG-back/backend/backend
   # flower:
   #   <<: *restart_policy
   #   image: mher/flower
