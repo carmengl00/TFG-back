@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time
 
 import strawberry
 
@@ -12,8 +12,8 @@ class ReservedSlotType:
     name: str
     description: str
     email: str
-    start_time: time
-    end_time: time
+    start_time: datetime
+    end_time: datetime
 
 
 @strawberry.type
