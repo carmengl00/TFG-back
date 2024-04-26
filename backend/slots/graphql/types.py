@@ -9,6 +9,7 @@ from resources.graphql.types import ResourceType
 @strawberry.type
 class ReservedSlotType:
     resource: ResourceType
+    id: str
     name: str
     description: str
     email: str
