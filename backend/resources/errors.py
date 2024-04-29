@@ -1,16 +1,16 @@
-DATE_ERROR = "The start date must be before the end date."
+DATE_ERROR = "La fecha de inicio debe ser anterior a la fecha de finalización."
 EXISTING_RESOURCE = (
-    "A resource with the same characteristics already exists for this user."
+    "Ya existe un recurso con las mismas características para este usuario."
 )
-PAST_START_DATE = "The start date must be today or in the future."
-PAST_END_DATE = "The end date must be in the future."
+PAST_START_DATE = "La fecha de inicio debe ser hoy o en el futuro."
+PAST_END_DATE = "La fecha de finalización debe estar en el futuro."
 
-PERMISSION_ERROR = "Resource not found or you don't have permission to update it."
+PERMISSION_ERROR = "Recurso no encontrado o no tienes permiso para actualizarlo."
 
-TIME_ERROR = "The start time must be before the end time"
-OUT_OF_RANGE = "Availability date must fall within the resource's start and end dates."
-OVERLAP_ERROR = (
-    "This availability already exists or overlaps in time with another existing one"
+TIME_ERROR = "La hora de inicio debe ser anterior a la hora de finalización."
+OUT_OF_RANGE = (
+    "La fecha de disponibilidad debe estar dentro de las fechas de inicio y finalización del recurso."
 )
+OVERLAP_ERROR = "Esta disponibilidad ya existe o se superpone en el tiempo con otra existente."
 
-EXISTING_PUBLIC_NAME = "A user with that public name already exists."
+EXISTING_PUBLIC_NAME = "Ya existe un usuario con ese nombre de usuario."
