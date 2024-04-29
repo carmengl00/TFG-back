@@ -12,3 +12,5 @@ OUT_OF_RANGE = "Availability date must fall within the resource's start and end 
 OVERLAP_ERROR = (
     "This availability already exists or overlaps in time with another existing one"
 )
+
+EXISTING_PUBLIC_NAME = "A user with that public name already exists."

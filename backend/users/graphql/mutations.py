@@ -1,3 +1,4 @@
+from resources.errors import EXISTING_PUBLIC_NAME
 import jwt
 import strawberry
 from django.conf import settings
@@ -14,6 +15,7 @@ from users import utils as users_utils
 from users.graphql.inputs import (
     ChangePasswordInput,
     LoginInput,
+    ProfileEditInput,
     ProfileInput,
     RegisterInput,
     RequestResetPasswordInput,
@@ -165,3 +167,27 @@ class Mutation:
         user.set_password(input.password)
         user.save()
         return True
+    
+    @login_required
+    @strawberry.mutation
+    def update_user(self, input: ProfileEditInput, info: Info) -> UserType:
+        user = info.context.request.user
+        
+        updated_fields = {
+            "first_name": user.first_name if input.first_name == strawberry.UNSET else input.first_name,
+            "last_name": user.last_name if input.last_name == strawberry.UNSET else input.last_name,
+            "email": user.email if input.email == strawberry.UNSET else input.email,
+            "public_name": user.public_name if input.public_name == strawberry.UNSET else input.public_name,
+        }
+
+        existing_public_name = User.objects.filter(public_name=updated_fields["public_name"]).exclude(id=user.id).first()
+        if existing_public_name:
+            raise Exception(EXISTING_PUBLIC_NAME)
+        
+        user.first_name = updated_fields["first_name"]
+        user.last_name = updated_fields["last_name"]
+        user.email = updated_fields["email"]
+        user.public_name = updated_fields["public_name"]
+
+        user.save()
+        return user

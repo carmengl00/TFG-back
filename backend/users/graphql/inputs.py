@@ -21,6 +21,13 @@ class ProfileInput:
     first_name: str
     last_name: str
 
+@strawberry.input
+class ProfileEditInput:
+    first_name: str | None = strawberry.UNSET
+    last_name: str | None = strawberry.UNSET
+    email: str | None = strawberry.UNSET
+    public_name: str | None = strawberry.UNSET
+
 
 @strawberry.input
 class ChangePasswordInput:
