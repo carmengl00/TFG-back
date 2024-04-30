@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Confirmada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333333;
+            margin-top: 0;
+        }
+
+        p {
+            color: #555555;
+            margin: 0 0 10px;
+        }
+
+        .reservation-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .reservation-details h2 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .reservation-details p {
+            margin-bottom: 5px;
+            color: #555555;
+        }
+
+        .reservation-details strong {
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dddddd;
+            text-align: center;
+            color: #777777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Reserva Confirmada!</h1>
+        <p>Estimado(a) {{ first_name }} {{ last_name }},</p>
+        <p>Su reserva ha sido confirmada con éxito. A continuación, encontrará los detalles de su reserva:</p>
+        
+        <div class="reservation-details">
+            <h2>Detalles de la Reserva:</h2>
+            <p><strong>Descripción:</strong> {{ resource_description }}</p>
+            <p><strong>Duración:</strong> {{ available_time }}</p>
+            <p><strong>Ubicación:</strong> {{ location }}</p>
+            <p><strong>Horario:</strong> {{ start_time }} - {{ end_time }}</p>
+            <p><strong>Reservado por:</strong> {{ first_name }} {{ last_name }}</p>
+            <p><strong>Correo electrónico:</strong> {{ email }}</p>
+            {% if description %}
+            <p><strong>Nota:</strong> {{ description }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="footer">
+            <p>Gracias por elegir nuestro servicio. Si tiene alguna pregunta, no dude en contactarnos.</p>
+            <p>Si tiene alguna duda puede ponerse en contacto con el administrador del recurso: {{admin_email}}</p>
+        </div>
+    </div>
+</body>
+</html>

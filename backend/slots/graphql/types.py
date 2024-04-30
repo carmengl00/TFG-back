@@ -27,3 +27,8 @@ class SlotType:
 @strawberry.type
 class PaginatedReservedSlotType(PaginatedQueryType):
     edges: list[ReservedSlotType]
+
+@strawberry.type
+class EmailResponse:
+    success: bool
+    message: str

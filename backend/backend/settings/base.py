@@ -20,6 +20,16 @@ ALLOWED_HOSTS = ["*"]
 
 INTERNAL_IPS = ["localhost"]
 
+#EMAIL
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'soportetfg2@gmail.com'
+EMAIL_HOST_PASSWORD = 'evvhqamflsuatbay'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -150,22 +160,6 @@ MEDIA_UPLOAD_BACKEND = os.getenv(
 )
 URL_FRONT = os.getenv("URL_FRONT", "backend:/")
 URL_API = os.getenv("URL_API", "localhost")
-
-# EMAIL
-EMAIL_URL = os.environ.get("EMAIL_URL")
-
-# Documentation: https://github.com/migonzalvar/dj-email-url
-email_config = dj_email_url.parse(EMAIL_URL or "smtp://mailhog:1025")
-
-EMAIL_BACKEND = email_config["EMAIL_BACKEND"]
-EMAIL_FILE_PATH = email_config["EMAIL_FILE_PATH"]
-EMAIL_HOST_USER = email_config["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = email_config["EMAIL_HOST_PASSWORD"]
-EMAIL_HOST = email_config["EMAIL_HOST"]
-EMAIL_PORT = email_config["EMAIL_PORT"]
-EMAIL_USE_TLS = email_config["EMAIL_USE_TLS"]
-EMAIL_USE_SSL = email_config["EMAIL_USE_SSL"]
-EMAIL_TIMEOUT = email_config["EMAIL_TIMEOUT"]
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 CELERY_ACCEPT_CONTENT = ["application/json"]

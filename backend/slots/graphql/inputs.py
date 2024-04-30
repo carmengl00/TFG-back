@@ -19,3 +19,17 @@ class CreateReservedSlotInput:
     day: date
     start_time: time
     end_time: time
+
+@strawberry.input
+class SendEmailReservationInput:
+    email: str
+    resource_name: str
+    resource_description: str
+    available_time: str
+    location: str
+    start_time: time
+    end_time: time
+    first_name: str
+    last_name: str
+    description: str
+    admin_email: str
