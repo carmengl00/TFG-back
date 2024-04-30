@@ -1,0 +1,1 @@
+ Reserva Eliminada: {{resource_name}} - {{start_time}} a {{end_time}}
