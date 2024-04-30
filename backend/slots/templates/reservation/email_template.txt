@@ -1,4 +1,4 @@
-Hola {{first_name}} {{last_name}},
+Hola {{name}},
 
 Tiene una reserva creada con los siguientes datos:
 Descripción del recurso: {{resource_description}}
@@ -6,7 +6,7 @@ Duración: {{available_time}}
 Ubicación: {{location}}
 Horario: {{start_time}} - {{end_time}}
 
-Reservado por: {{first_name}} {{last_name}}, {{email}}
+Reservado por: {{name}}, {{email}}
 
 Nota: {{description}}
 

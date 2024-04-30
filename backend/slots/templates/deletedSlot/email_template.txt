@@ -1,4 +1,4 @@
-Estimado(a) {{ first_name }} {{ last_name }},
+Estimado(a) {{ name }},
 
 Lamentamos informarle que su reserva ha sido eliminada. A continuación, encontrará los detalles de la reserva eliminada:
 
@@ -6,7 +6,7 @@ Descripción del recurso: {{ resource_description }}
 Duración: {{ available_time }}
 Ubicación: {{ location }}
 Horario: {{ start_time }} - {{ end_time }}
-Reservado por: {{ first_name }} {{ last_name }}
+Reservado por: {{ name }}
 Correo electrónico: {{ email }}
 
 {% if description %}

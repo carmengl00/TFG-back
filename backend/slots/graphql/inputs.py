@@ -29,7 +29,6 @@ class SendEmailReservationInput:
     location: str
     start_time: time
     end_time: time
-    first_name: str
-    last_name: str
+    name: str
     description: str
     admin_email: str

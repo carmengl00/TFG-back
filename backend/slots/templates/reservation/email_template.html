@@ -65,7 +65,7 @@
 <body>
     <div class="container">
         <h1>¡Reserva Confirmada!</h1>
-        <p>Estimado(a) {{ first_name }} {{ last_name }},</p>
+        <p>Estimado(a) {{ name }},</p>
         <p>Su reserva ha sido confirmada con éxito. A continuación, encontrará los detalles de su reserva:</p>
         
         <div class="reservation-details">
@@ -74,7 +74,7 @@
             <p><strong>Duración:</strong> {{ available_time }}</p>
             <p><strong>Ubicación:</strong> {{ location }}</p>
             <p><strong>Horario:</strong> {{ start_time }} - {{ end_time }}</p>
-            <p><strong>Reservado por:</strong> {{ first_name }} {{ last_name }}</p>
+            <p><strong>Reservado por:</strong> {{ name }}</p>
             <p><strong>Correo electrónico:</strong> {{ email }}</p>
             {% if description %}
             <p><strong>Nota:</strong> {{ description }}</p>
