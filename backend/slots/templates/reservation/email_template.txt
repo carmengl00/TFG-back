@@ -1,0 +1,16 @@
+Hola {{name}},
+
+Tiene una reserva creada con los siguientes datos:
+Descripción del recurso: {{resource_description}}
+Duración: {{available_time}}
+Ubicación: {{location}}
+Horario: {{start_time}} - {{end_time}}
+
+Reservado por: {{name}}, {{email}}
+
+Nota: {{description}}
+
+Si tiene alguna duda puede ponerse en contacto con el administrador del recurso: {{admin_email}}
+
+Saludos,
+Equipo de Reservas

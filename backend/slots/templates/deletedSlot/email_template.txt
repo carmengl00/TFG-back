@@ -1,0 +1,19 @@
+Estimado(a) {{ name }},
+
+Lamentamos informarle que su reserva ha sido eliminada. A continuación, encontrará los detalles de la reserva eliminada:
+
+Descripción del recurso: {{ resource_description }}
+Duración: {{ available_time }}
+Ubicación: {{ location }}
+Horario: {{ start_time }} - {{ end_time }}
+Reservado por: {{ name }}
+Correo electrónico: {{ email }}
+
+{% if description %}
+Nota: {{ description }}
+{% endif %}
+
+Si tiene alguna pregunta o necesita más información, no dude en contactarnos.
+
+Atentamente,
+El equipo de soporte

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Eliminada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333333;
+        }
+
+        p {
+            color: #555555;
+        }
+
+        .reservation-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .reservation-details h2 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .reservation-details p {
+            margin-bottom: 10px;
+            color: #555555;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dddddd;
+            text-align: center;
+            color: #777777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Reserva Eliminada!</h1>
+        <p>Estimado/a {{ name }},</p>
+        <p>Lamentamos informarte que tu reserva para el recurso "{{ resource_name }}" ha sido cancelada por el administrador del recurso.</p>
+        
+        <div class="reservation-details">
+            <h2>Detalles de la Reserva Cancelada:</h2>
+            <p><strong>Descripción del recurso:</strong> {{ resource_description }}</p>
+            <p><strong>Duración:</strong> {{ available_time }}</p>
+            <p><strong>Ubicación:</strong> {{ location }}</p>
+            <p><strong>Horario reservado:</strong> {{ start_time }} - {{ end_time }}</p>
+        </div>
+        
+        <div class="footer">
+            <p>Si tienes alguna pregunta o necesitas más información, no dudes en ponerte en contacto con nosotros.</p>
+        </div>
+    </div>
+</body>
+</html>
